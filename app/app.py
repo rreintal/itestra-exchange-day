@@ -102,7 +102,8 @@ def main():
 
         # TODO: get format
         message = getResult()
-        print(message)
+        
+        #print(message)
 
         # Post
         response = send_request(

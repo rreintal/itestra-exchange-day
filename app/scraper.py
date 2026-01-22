@@ -138,6 +138,7 @@ def write_csv(records: List[Dict[str, Any]], path: Path) -> None:
 def record_to_Result(records: Iterable[Dict[str, Any]]) -> str:
 
     lines: List[str] = []
+    restaurants = []
     for rec in records:
         name = rec.get("name", "Unnamed")
 
@@ -154,9 +155,11 @@ def record_to_Result(records: Iterable[Dict[str, Any]]) -> str:
 
             Meal_obj = Meal(name=dish, price=price)
             restaurant = Restaurant(name=name, emoji="", meals=[Meal_obj])
+            restaurants.insert(0, restaurant)
             
         
-    result = Result(restaurants=[restaurant])
+    result = Result(restaurants=restaurants)
+    #print(result.restaurants[0].name)
     
     return result
 
