@@ -21,7 +21,7 @@ EMOJIS: Dict[str, str] = {
 }
 
 BASE_URL = require_env("BASE_PAEVAPRAAD_URL")
-TARGET_NAMES = require_env("TARGET_NAMES")
+TARGET_NAMES = {"Hiiu Pubi", "KIUS Restoran", "Jah Kallis Restoran"}
 HEADERS = {
     "User-Agent": (
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
