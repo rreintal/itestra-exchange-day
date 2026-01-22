@@ -102,8 +102,8 @@ def main():
 
         # TODO: get format
         message = getResult()
-        
-        #print(message)
+        #for restaurant in message.restaurants:
+            #print(restaurant.name)
 
         # Post
         response = send_request(

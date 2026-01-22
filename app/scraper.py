@@ -157,8 +157,10 @@ def record_to_Result(records: Iterable[Dict[str, Any]]) -> str:
             restaurant = Restaurant(name=name, emoji="", meals=[Meal_obj])
             restaurants.insert(0, restaurant)
             
-        
+    restaurants = set(restaurants)
     result = Result(restaurants=restaurants)
+    print("✅ Parsed Result object.")
+    print(len(result.restaurants))
     #print(result.restaurants[0].name)
     
     return result
