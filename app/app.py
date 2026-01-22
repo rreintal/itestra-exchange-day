@@ -90,6 +90,9 @@ def send_request(
     except ValueError:
         return response.text
 
+def createMessage(result: Result) -> str:
+    message = "Today's Menus:\n"
+    return message
 
 
 def main():
@@ -101,9 +104,8 @@ def main():
         #pretty_print(response)
 
         # TODO: get format
-        message = getResult()
-        #for restaurant in message.restaurants:
-            #print(restaurant.name)
+        result = getResult()
+        message = createMessage(result)
 
         # Post
         response = send_request(
@@ -111,15 +113,18 @@ def main():
             url=BASE_URL + "/posts",
             json_payload = {
                 "channel_id" : CHANNEL_ID,
-                "message" : "message"
+                "message" : message
             }
         )
 
         # React
         # TODO: emoji per name
+
         POST_ID = response["id"]
 
-        response = send_request(
+        for restaurant in result.restaurants:
+            emoji = restaurant.emoji
+            response = send_request(
             method = "POST",
             url = BASE_URL + "/reactions",
             json_payload={
@@ -127,10 +132,9 @@ def main():
                 "post_id": POST_ID,
                 "emoji_name": "hamburger",
                 "create_at": 0
-            }
-        )
-
-        pretty_print(response)
+                }
+            )
+            pretty_print(response)
 
     except HttpError as e:
         print(e)
