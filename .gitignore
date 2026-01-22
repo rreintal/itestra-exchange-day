@@ -1,0 +1,6 @@
+mattermost/data
+mattermost/mattermost/certs
+mattermost/docker-compose.override.yml
+mattermost/docker-compose.override.yaml
+mattermost/volumes/mattermost/logs/
+.idea
