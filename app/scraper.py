@@ -11,12 +11,17 @@ from typing import Iterable, List, Dict, Any
 import requests
 from bs4 import BeautifulSoup, Tag
 from tqdm import tqdm
+from app.app import require_env
 from result import Result, Restaurant, Meal
 
+EMOJIS: Dict[str, str] = {
+    "Jah Kallis Restoran": "🍕",
+    "KIUS Restoran": "🍔",
+    "Hiiu Pubi": "🍟",
+}
 
-BASE_URL = "https://www.paevapraad.ee/tallinn/nomme/"
-TARGET_NAMES = {"Hiiu Pubi", "KIUS Restoran", "Jah Kallis Restoran"}
-OUTPUT_CSV = Path("paevapraad_nomme.csv")
+BASE_URL = require_env("BASE_PAEVAPRAAD_URL")
+TARGET_NAMES = require_env("TARGET_NAMES")
 HEADERS = {
     "User-Agent": (
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
@@ -155,7 +160,7 @@ def record_to_Result(records: Iterable[Dict[str, Any]]) -> str:
 
             Meal_obj = Meal(name=dish, price=price)
         
-        restaurant = Restaurant(name=name, emoji="", meals=[Meal_obj])
+        restaurant = Restaurant(name=name, emoji=EMOJIS.get(name, ""), meals=[Meal_obj])
         restaurants.insert(0, restaurant)
             
     result = Result(restaurants=restaurants)
@@ -172,9 +177,6 @@ def scrape():
         sys.exit(0)
 
     return record_to_Result(records.values())   # pass the dict‑values view
-    
-    
-
     
 def getResult():
     return scrape()
