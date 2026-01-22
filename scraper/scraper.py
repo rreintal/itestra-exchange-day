@@ -1,12 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-"""
-paevapraad.ee – lunch‑offer scraper for Hiiu Pubi, KIUS Restoran & Jah Kallis Restoran
-===================================================================================
-
-"""
-
 import csv
 import json
 import re
@@ -17,6 +11,7 @@ from typing import Iterable, List, Dict, Any
 import requests
 from bs4 import BeautifulSoup, Tag
 from tqdm import tqdm
+from app.response import Result, Restaurant, Meal
 
 BASE_URL = "https://www.paevapraad.ee/tallinn/nomme/"
 TARGET_NAMES = {"Hiiu Pubi", "KIUS Restoran", "Jah Kallis Restoran"}
@@ -139,15 +134,11 @@ def write_csv(records: List[Dict[str, Any]], path: Path) -> None:
     print(f"✅ Wrote {len(records)} rows → {path}")
 
 
-def record_to_markdown(records: Iterable[Dict[str, Any]]) -> str:
+def record_to_Result(records: Iterable[Dict[str, Any]]) -> str:
 
     lines: List[str] = []
-    lines.append("| koht | söök | hind |")
-    lines.append("|------------|------|-------|")
     for rec in records:
         name = rec.get("name", "Unnamed")
-        #lines.append(f"#### {name}")
-        
 
         raw_menu = rec.get("menu", [])
         if isinstance(raw_menu, str):
@@ -159,15 +150,17 @@ def record_to_markdown(records: Iterable[Dict[str, Any]]) -> str:
         for item in raw_menu:
             dish = item.get("dish", "").replace("|", r"\|")  # escape pipe chars
             price = item.get("price")
-            price_str = f"{price:.2f}" if isinstance(price, (int, float)) else "—"
-            lines.append(f"| {name} | {dish} | {price_str} |")
 
-    # Join everything, strip any trailing blank line, then add a final newline
-    # (the trailing newline makes console output look nicer).
-    return "\n".join(lines).strip() + "\n"
+            Meal_obj = Meal(name=dish, price=price)
+            restaurant = Restaurant(name=name, emoji="", meals=[Meal_obj])
+            
+        
+    result = Result(restaurants=[restaurant])
+    
+    return result
 
 
-def main() -> None:
+def scrape():
     html = fetch_page(BASE_URL)
     records = scrape_page(html)
 
@@ -175,8 +168,6 @@ def main() -> None:
         print("⚠️ No matching restaurants found – check TARGET_NAMES or page structure.")
         sys.exit(0)
 
-    md = record_to_markdown(records.values())   # pass the dict‑values view
-    print(md)
-
-if __name__ == "__main__":
-    main()
+    return record_to_Result(records.values())   # pass the dict‑values view
+    
+    
