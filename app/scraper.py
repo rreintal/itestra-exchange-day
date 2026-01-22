@@ -7,20 +7,22 @@ import re
 import sys
 from pathlib import Path
 from typing import Iterable, List, Dict, Any
+from dotenv import load_dotenv
+import os
 
 import requests
 from bs4 import BeautifulSoup, Tag
 from tqdm import tqdm
-from app.app import require_env
 from result import Result, Restaurant, Meal
 
+# TODO: move to .env
 EMOJIS: Dict[str, str] = {
-    "Jah Kallis Restoran": "🍕",
-    "KIUS Restoran": "🍔",
-    "Hiiu Pubi": "🍟",
+    "Jah Kallis Restoran": "zipper_mouth_face",
+    "KIUS Restoran": "yum",
+    "Hiiu Pubi": "grin",
 }
 
-BASE_URL = require_env("BASE_PAEVAPRAAD_URL")
+BASE_URL = "https://www.paevapraad.ee/tallinn/nomme/" # TODO: move to .env
 TARGET_NAMES = {"Hiiu Pubi", "KIUS Restoran", "Jah Kallis Restoran"}
 HEADERS = {
     "User-Agent": (
@@ -32,6 +34,8 @@ HEADERS = {
     "Referer": "https://www.google.com/",
 }
 TIMEOUT = 15  # seconds
+
+
 
 def fetch_page(url: str) -> str:
     """GET the page, raise on HTTP errors."""
@@ -145,6 +149,7 @@ def record_to_Result(records: Iterable[Dict[str, Any]]) -> str:
     lines: List[str] = []
     restaurants = []
     for rec in records:
+        meals = []
         name = rec.get("name", "Unnamed")
 
         raw_menu = rec.get("menu", [])
@@ -158,9 +163,9 @@ def record_to_Result(records: Iterable[Dict[str, Any]]) -> str:
             dish = item.get("dish", "").replace("|", r"\|")  # escape pipe chars
             price = item.get("price")
 
-            Meal_obj = Meal(name=dish, price=price)
+            meals.insert(0, Meal(name=dish, price=price))
         
-        restaurant = Restaurant(name=name, emoji=EMOJIS.get(name, ""), meals=[Meal_obj])
+        restaurant = Restaurant(name=name, emoji=EMOJIS.get(name, ""), meals=meals)
         restaurants.insert(0, restaurant)
             
     result = Result(restaurants=restaurants)

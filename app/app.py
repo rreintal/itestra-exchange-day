@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from pathlib import Path
 
 from result import Result
-from scraper import scrape, getResult
+from scraper import getResult
 
 
 
@@ -91,7 +91,15 @@ def send_request(
         return response.text
 
 def createMessage(result: Result) -> str:
-    message = "Today's Menus:\n"
+    message = ""
+    for restaurant in result.restaurants:
+        message += f"**:{restaurant.emoji}: {restaurant.name}**\n"
+        for meal in restaurant.meals:
+            if meal.price is not None:
+                message += f"- {meal.name}: {meal.price:.2f} €\n"
+            else:
+                message += f"- {meal.name}: N/A\n"
+        message += "\n"
     return message
 
 
@@ -130,7 +138,7 @@ def main():
             json_payload={
                 "user_id": BOT_USER_ID,
                 "post_id": POST_ID,
-                "emoji_name": "hamburger",
+                "emoji_name": emoji,
                 "create_at": 0
                 }
             )
