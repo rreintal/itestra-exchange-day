@@ -5,7 +5,3 @@ mattermost/docker-compose.override.yaml
 mattermost/volumes/mattermost/logs/
 .idea
 info.txt
-
-Token Description: uus
-Token ID: 6xbkod1xojnupn6gutujiohiny
-Access Token: 6kdoa54cq7yi5rsosftxisjz3e
