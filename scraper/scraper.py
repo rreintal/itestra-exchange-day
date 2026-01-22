@@ -5,12 +5,6 @@
 paevapraad.ee – lunch‑offer scraper for Hiiu Pubi, KIUS Restoran & Jah Kallis Restoran
 ===================================================================================
 
-Author : ChatGPT (OpenAI)
-Date   : 2026‑01‑22
-License: MIT (feel free to adapt)
-
-The script fetches the public HTML page https://www.paevapraad.ee/tallinn/nomme/
-and extracts the data that is already rendered in the source (no Selenium needed).
 """
 
 import csv
@@ -134,11 +128,7 @@ def write_csv(records: List[Dict[str, Any]], path: Path) -> None:
 
     fieldnames = [
         "name",
-        "schedule",
-        "cheapest_price",
-        "menu",
-        "map",
-        "free_parking",
+        "menu"
     ]
 
     with path.open("w", newline="", encoding="utf-8") as f:
