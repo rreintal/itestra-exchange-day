@@ -430,3 +430,4 @@
 {"timestamp":"2026-01-22 09:46:26.624 +02:00","level":"info","msg":"Invalid session","caller":"web/handlers.go:261","error":"GetSession: Invalid session token=mz4fjsusfbn67go6fc4hn9qo4w, err="}
 {"timestamp":"2026-01-22 09:46:27.609 +02:00","level":"warn","msg":"Error while creating session for user access token","caller":"app/session.go:114","error":"createSessionForUserAccessToken: Invalid or missing token., resource \"UserAccessToken\" not found, id: token="}
 {"timestamp":"2026-01-22 09:47:00.099 +02:00","level":"info","msg":"Worker: Job is complete","caller":"migrations/worker.go:131","worker_name":"Migrations","job_id":"7h77uxtbrt8opekga7d7wx9kua","job_type":"migrations","job_create_at":"Jan 22 07:46:52.895"}
+{"timestamp":"2026-01-22 09:49:59.965 +02:00","level":"error","msg":"Failed to get system bot","caller":"app/post.go:2265","component":"post_reminders","error":"GetSystemBot: List of admins is empty."}
