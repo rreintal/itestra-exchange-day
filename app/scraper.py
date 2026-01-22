@@ -8,12 +8,13 @@ import sys
 from pathlib import Path
 from typing import Iterable, List, Dict, Any
 from dotenv import load_dotenv
-import os
 
 import requests
 from bs4 import BeautifulSoup, Tag
 from tqdm import tqdm
 from result import Result, Restaurant, Meal
+
+load_dotenv()  # loads .env from current directory
 
 # TODO: move to .env
 EMOJIS: Dict[str, str] = {

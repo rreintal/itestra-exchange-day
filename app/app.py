@@ -1,23 +1,17 @@
 import requests
 import json
-import os
 
-from dotenv import load_dotenv
 from pathlib import Path
 
 from result import Result
-from scraper import getResult
-
+from scraper import getScrapeResult
+from dotenv import load_dotenv
+from env_helpers import require_env
 
 
 
 load_dotenv()  # loads .env from current directory
 
-def require_env(name: str) -> str:
-    value = os.getenv(name)
-    if not value:
-        raise RuntimeError(f"Missing required environment variable: {name}")
-    return value
 
 # Constants
 API_VERSION = "/api/v4"
@@ -90,17 +84,23 @@ def send_request(
     except ValueError:
         return response.text
 
+
+### Message
 def createMessage(result: Result) -> str:
-    message = ""
+    lines: list[str] = []
+
     for restaurant in result.restaurants:
-        message += f"**:{restaurant.emoji}: {restaurant.name}**\n"
+        # Header
+        lines.append(f"#### :{restaurant.emoji}: {restaurant.name}")
+
+        # Meals
         for meal in restaurant.meals:
-            if meal.price is not None:
-                message += f"- {meal.name}: {meal.price:.2f} €\n"
-            else:
-                message += f"- {meal.name}: N/A\n"
-        message += "\n"
-    return message
+            lines.append(f"* {meal.name} {meal.price}€")
+
+        lines.append("")
+
+    # Remove trailing empty line
+    return "\n".join(lines).rstrip()
 
 
 def main():
@@ -111,8 +111,8 @@ def main():
         #)
         #pretty_print(response)
 
-        # TODO: get format
-        result = getResult()
+        # Scrape
+        result = getScrapeResult()
         message = createMessage(result)
 
         # Post
@@ -124,9 +124,6 @@ def main():
                 "message" : message
             }
         )
-
-        # React
-        # TODO: emoji per name
 
         POST_ID = response["id"]
 
