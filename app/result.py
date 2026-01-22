@@ -1,6 +1,3 @@
-from scraper.scraper import scrape
-
-
 class Result:
     def __init__(self, restaurants):
         self.restaurants = restaurants  # list of Restaurant
@@ -17,8 +14,3 @@ class Meal:
     def __init__(self, name, price):
         self.name = name
         self.price = price
-
-
-# TODO:
-def getFormattedMenus():
-    return scrape()

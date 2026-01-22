@@ -5,7 +5,9 @@ import os
 from dotenv import load_dotenv
 from pathlib import Path
 
-from scraper import getFormattedMenus
+from result import Result
+from scraper import scrape, getResult
+
 
 
 
@@ -99,7 +101,8 @@ def main():
         #pretty_print(response)
 
         # TODO: get format
-        message = getFormattedMenus()
+        message = getResult()
+        print(message)
 
         # Post
         response = send_request(
@@ -107,7 +110,7 @@ def main():
             url=BASE_URL + "/posts",
             json_payload = {
                 "channel_id" : CHANNEL_ID,
-                "message" : message
+                "message" : "message"
             }
         )
 
